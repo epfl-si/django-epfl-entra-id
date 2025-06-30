@@ -1,12 +1,12 @@
 # django-epfl-entra-id
 
-`Entra ID <https://inside.epfl.ch/identite-numerique/>`_ authentication for django.
+[Entra ID](https://inside.epfl.ch/identite-numerique/) authentication for Django.
 
 
 Requirements
 ============
 
-``django-epfl-entra-id`` needs the Django 3.2+ LTS
+``django-epfl-entra-id`` needs Django 3.2+ LTS
 
 Installation
 ============
@@ -21,7 +21,7 @@ Configuration
 settings.py
 -----------
 
-* Add in your ``MIDDLEWARE``::
+* Add in your ``MIDDLEWARE``:
 ```bash
 MIDDLEWARE = [
   ...
@@ -30,7 +30,7 @@ MIDDLEWARE = [
  ]
 ```
 
-* Add into ``INSTALLED_APPS``::
+* Add into ``INSTALLED_APPS``:
 ```bash
 INSTALLED_APPS = [
   ...
@@ -40,9 +40,11 @@ INSTALLED_APPS = [
 ]
 ```
 
-* Add to authentication backends::
+* Add to authentication backends:
 ```bash
-AUTHENTICATION_BACKENDS = ("django_epfl_entra_id.backend.OFRFOIDCAB","django.contrib.auth.backends.ModelBackend")
+USER_PROFILE_MODEL = "userprofile.UserProfile" # or your user model
+
+AUTHENTICATION_BACKENDS = ("django_epfl_entra_id.backend.OFRFOIDCAB", "django.contrib.auth.backends.ModelBackend")
 ```
 
 * Add OIDC configuration:
@@ -84,7 +86,7 @@ LOGIN_REQUIRED_IGNORE_PATHS = [
 urls.py
 -------
 
-* Add these lines::
+* Add these lines:
 ```bash
 urlpatterns += re_path(r'^oidc/', include('mozilla_django_oidc.urls')),
 ```
