@@ -2,6 +2,7 @@
 
 [Entra ID](https://inside.epfl.ch/identite-numerique/) authentication for Django.
 
+This package is inspired by the documentation of [mozilla-django-oidc](https://github.com/epfl-si/entra-id-auth-examples/tree/main/oidc/python/django/mozilla-django-oidc).
 
 Requirements
 ============
