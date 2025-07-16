@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 ```bash
 USER_PROFILE_MODEL = "userprofile.UserProfile" # or your user model
 
-AUTHENTICATION_BACKENDS = ("django_epfl_entra_id.backend.OFRFOIDCAB", "django.contrib.auth.backends.ModelBackend")
+AUTHENTICATION_BACKENDS = ("django_epfl_entra_id.backend.EPFLOIDCAB", "django.contrib.auth.backends.ModelBackend")
 ```
 
 * Add OIDC configuration:

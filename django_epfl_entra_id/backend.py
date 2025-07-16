@@ -7,7 +7,7 @@ from django.conf import settings
 User = get_user_model()
 
 
-class OFRFOIDCAB(OIDCAuthenticationBackend):
+class EPFLOIDCAB(OIDCAuthenticationBackend):
     def create_user(self, claims):
         user = self.update_attributes_if_same_sciper(claims)
         if user:
@@ -45,7 +45,7 @@ class OFRFOIDCAB(OIDCAuthenticationBackend):
             Get user info from both user info endpoint (default) and
             merge with ID token information.
         """
-        userinfo = super(OFRFOIDCAB, self).get_userinfo(access_token, id_token, payload)
+        userinfo = super(EPFLOIDCAB, self).get_userinfo(access_token, id_token, payload)
 
         id_token_decoded: str = jwt.decode(
             id_token, options={"verify_signature": False}
