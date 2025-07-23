@@ -41,3 +41,9 @@ path = "django_epfl_entra_id/__init__.py"
 [tool.black]
 line-length = 80
 include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 80
+multi_line_output = 3
+include_trailing_comma = "True"
