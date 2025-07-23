@@ -37,3 +37,7 @@ Changelog = "https://github.com/epfl-si/django-epfl-entra-id/blob/main/CHANGELOG
 [tool.pdm.version]
 source = "file"
 path = "django_epfl_entra_id/__init__.py"
+
+[tool.black]
+line-length = 80
+include = '\.pyi?$'
