@@ -5,7 +5,6 @@ build-backend = "pdm.backend"
 [project]
 name = "django-epfl-entra-id"
 dynamic = ["version"]
-requires-python = ">= 3.6"
 dependencies = [
   "mozilla-django-oidc",
   "pyjwt",
