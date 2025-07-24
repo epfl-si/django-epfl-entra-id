@@ -1,5 +1,7 @@
 # django-epfl-entra-id
 
+[![Test Status][github-actions-image]][github-actions-url]
+
 [Entra ID](https://inside.epfl.ch/identite-numerique/) authentication for Django.
 
 This package is inspired by the documentation of [mozilla-django-oidc](https://github.com/epfl-si/entra-id-auth-examples/tree/main/oidc/python/django/mozilla-django-oidc).
@@ -93,3 +95,6 @@ urlpatterns += re_path(r'^oidc/', include('mozilla_django_oidc.urls')),
 ```
 
 \(c) All rights reserved. ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland, DSI
+
+[github-actions-image]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml/badge.svg?branch=main
+[github-actions-url]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml
