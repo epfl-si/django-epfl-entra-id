@@ -1,8 +1,8 @@
 import jwt
-from mozilla_django_oidc.auth import OIDCAuthenticationBackend
-from django.contrib.auth import get_user_model
 from django.apps import apps
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 User = get_user_model()
 
@@ -17,11 +17,11 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
             username=claims.get("gaspar"),
             email=claims.get("email"),
             first_name=claims.get("given_name"),
-            last_name=claims.get("family_name")
+            last_name=claims.get("family_name"),
         )
 
         model_path = settings.USER_PROFILE_MODEL
-        ProfileModel = apps.get_model(*model_path.split('.'))
+        ProfileModel = apps.get_model(*model_path.split("."))
         profile, _ = ProfileModel.objects.get_or_create(user=user)
         profile.sciper = claims.get("uniqueid")
         profile.save()
@@ -42,10 +42,12 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
 
     def get_userinfo(self, access_token, id_token, payload):
         """
-            Get user info from both user info endpoint (default) and
-            merge with ID token information.
+        Get user info from both user info endpoint (default) and
+        merge with ID token information.
         """
-        userinfo = super(EPFLOIDCAB, self).get_userinfo(access_token, id_token, payload)
+        userinfo = super(EPFLOIDCAB, self).get_userinfo(
+            access_token, id_token, payload
+        )
 
         id_token_decoded: str = jwt.decode(
             id_token, options={"verify_signature": False}
@@ -84,5 +86,5 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
 
     def get_user_profile(self, sciper):
         model_path = settings.USER_PROFILE_MODEL
-        ProfileModel = apps.get_model(*model_path.split('.'))
+        ProfileModel = apps.get_model(*model_path.split("."))
         return ProfileModel.objects.filter(sciper=sciper).first()
