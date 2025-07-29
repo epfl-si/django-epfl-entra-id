@@ -2,56 +2,44 @@
 
 [![Test Status][github-actions-image]][github-actions-url]
 
-[Entra ID](https://inside.epfl.ch/identite-numerique/) authentication for Django.
+[Entra ID][entra-id] authentication for Django.
 
-This package is inspired by the documentation of [mozilla-django-oidc](https://github.com/epfl-si/entra-id-auth-examples/tree/main/oidc/python/django/mozilla-django-oidc).
+## Requirements
 
-Requirements
-============
+- Python 3.6 or later
+- Django 1.11, 2.2, 3.2 or 4.2
 
-``django-epfl-entra-id`` needs Django 3.2+ LTS
-
-Installation
-============
+## Installation
 
 ```bash
-pip install git+https://github.com/epfl-si/django-epfl-entra-id.git
+pip install django-epfl-entra-id
 ```
 
-Configuration
-=============
+## Documentation
 
-settings.py
------------
+### Settings
 
-* Add in your ``MIDDLEWARE``:
-```bash
-MIDDLEWARE = [
-  ...
-  'login_required.middleware.LoginRequiredMiddleware',
-  ...
- ]
-```
+Add `'mozilla_django_oidc'` to `INSTALLED_APPS`:
 
-* Add into ``INSTALLED_APPS``:
-```bash
+```python
 INSTALLED_APPS = [
   ...
   'django.contrib.auth',
-  'mozilla_django_oidc',
+  'mozilla_django_oidc',  # Load after auth
   ...
 ]
 ```
 
-* Add to authentication backends:
-```bash
-USER_PROFILE_MODEL = "userprofile.UserProfile" # or your user model
+Add `django_epfl_entra_id` authentication backend:
 
-AUTHENTICATION_BACKENDS = ("django_epfl_entra_id.backend.EPFLOIDCAB", "django.contrib.auth.backends.ModelBackend")
+```python
+AUTHENTICATION_BACKENDS = ("django_epfl_entra_id.auth.EPFLOIDCAB",)
 ```
 
-* Add OIDC configuration:
-```bash
+Register your application in the [App Portal][app-portal] and add the OIDC
+configuration:
+
+```python
 TENANT_ID = os.environ["TENANT_ID"]
 
 OIDC_RP_CLIENT_ID = os.environ["OIDC_RP_CLIENT_ID"]
@@ -64,37 +52,43 @@ OIDC_OP_JWKS_ENDPOINT = f"{AUTH_DOMAIN}/discovery/v2.0/keys"
 OIDC_OP_USER_ENDPOINT = "https://graph.microsoft.com/oidc/userinfo"
 OIDC_RP_SIGN_ALGO = "RS256"
 
-LOGIN_URL = '/oidc/authenticate'
-LOGIN_REDIRECT_URL = "/homepage"
+LOGIN_URL = '/auth/authenticate'
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
-
-# Only use this setting if you want to store the access token in the session
-# To use access token to call API
-OIDC_STORE_ACCESS_TOKEN = True
 ```
 
-* Configure required ignore paths
-```bash
-LOGIN_REQUIRED_IGNORE_PATHS = [
-  r'/accounts/login/$',
-  r'/accounts/logout/$',
-  r'^/oidc/.*$',  # All OIDC-related URLs
-  r'^/admin/.*$',
-  r'^/admin$',
-  r'^/static/.*$',
-  r'^/media/.*$',
-]
+### Routing
+
+Edit your `urls.py` and add the following:
+
+```python
+urlpatterns += re_path(r'^auth/', include('mozilla_django_oidc.urls')),
 ```
 
-urls.py
--------
+Example template:
 
-* Add these lines:
-```bash
-urlpatterns += re_path(r'^oidc/', include('mozilla_django_oidc.urls')),
+```htmldjango
+{% if user.is_authenticated %}
+  <p>Current user: {{ user.username }}</p>
+  <form action="{% url 'oidc_logout' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="logout">
+  </form>
+{% else %}
+  <a href="{% url 'oidc_authentication_init' %}?next={{ request.path }}">
+    Login
+  </a>
+{% endif %}
 ```
 
-\(c) All rights reserved. ECOLE POLYTECHNIQUE FEDERALE DE LAUSANNE, Switzerland, DSI
+### Optional configuration
+
+```python
+AUTH_PROFILE_MODULE = "userprofile.UserProfile"
+```
 
 [github-actions-image]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml/badge.svg?branch=main
 [github-actions-url]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml
+
+[entra-id]: https://inside.epfl.ch/identite-numerique/
+[app-portal]: https://app-portal.epfl.ch/
