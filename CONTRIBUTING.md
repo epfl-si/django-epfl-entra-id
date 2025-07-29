@@ -1,29 +1,31 @@
-6. Créer un package
-Dans le dossier racine :
+# Contributing
 
-pip install twine build
+## Setup
 
-python -m build
+Get the project with:
 
-python setup.py sdist bdist_wheel
-Le package sera dans dist/.
+```bash
+git clone git@github.com:epfl-si/django-epfl-entra-id.git
+cd django-epfl-entra-id.git
+```
 
+Then, create a virtual environment (Python version and some libraries) with
+your favourite tool and:
 
-7. (Optionnel) Uploader sur PyPI
-Si tu veux le distribuer publiquement :
+```bash
+pip install tox
+```
 
-pip install twine
-twine upload dist/*
+## Test
 
+```bash
+tox
+```
 
+## Release
 
-Pour tester localement dans un autre projet
-Tu peux installer le package localement avec :
-
-pip install -e /home/duratti/Workspace/fsd/django-epfl-entra-id
-
-
-
-Pour tester l'application avec le package sur git:
-
-pip install git+https://github.com/epfl-si/django-epfl-entra-id.git
+1. Bump the correct version
+1. Update the file [CHANGELOG.md](CHANGELOG.md)
+1. Create and push the tag  
+    `git tag -a v<version> -m "django-epfl-entra-id v<version> release"`  
+    `git push origin main --tags`
