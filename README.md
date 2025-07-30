@@ -2,7 +2,7 @@
 
 [![Test Status][github-actions-image]][github-actions-url]
 
-[Entra ID][entra-id] authentication for Django.
+Custom [Microsoft Entra ID][entra-id] Authentication Backend for Django.
 
 ## Requirements
 
@@ -90,5 +90,5 @@ AUTH_PROFILE_MODULE = "userprofile.UserProfile"
 [github-actions-image]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml/badge.svg?branch=main
 [github-actions-url]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml
 
-[entra-id]: https://inside.epfl.ch/identite-numerique/
+[entra-id]: https://inside.epfl.ch/identite-numerique/en/digital-identity-protection/
 [app-portal]: https://app-portal.epfl.ch/
