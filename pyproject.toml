@@ -9,7 +9,7 @@ dependencies = [
   "mozilla-django-oidc",
   "pyjwt",
 ]
-description = "A OIDC EntraID authentication backend for django."
+description = "Custom Microsoft Entra ID Authentication Backend for Django."
 keywords = ["django", "entraid", "oidc", "authentication"]
 readme = "README.md"
 authors = [
