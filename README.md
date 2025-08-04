@@ -1,6 +1,7 @@
 # django-epfl-entra-id
 
 [![Test Status][github-actions-image]][github-actions-url]
+[![Coverage Status][codecov-image]][codecov-url]
 [![PyPI version][pypi-image]][pypi-url]
 
 Custom [Microsoft Entra ID][entra-id] Authentication Backend for Django.
@@ -90,6 +91,9 @@ AUTH_PROFILE_MODULE = "userprofile.UserProfile"
 
 [github-actions-image]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml/badge.svg?branch=main
 [github-actions-url]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml
+
+[codecov-image]: https://codecov.io/gh/epfl-si/django-epfl-entra-id/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/epfl-si/django-epfl-entra-id
 
 [entra-id]: https://inside.epfl.ch/identite-numerique/en/digital-identity-protection/
 [app-portal]: https://app-portal.epfl.ch/
