@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-22.04
-    name: Test
+    name: Python ${{ matrix.python }} CI
 
     strategy:
       fail-fast: false
