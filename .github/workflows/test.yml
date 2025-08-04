@@ -28,3 +28,10 @@ jobs:
       - name: Tox tests
         run: |
           tox -v
+
+      - name: Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          name: Python ${{ matrix.python }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
