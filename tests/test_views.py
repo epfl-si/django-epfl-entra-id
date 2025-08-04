@@ -13,7 +13,6 @@ class EPFLEntraIdLoginTestCase(TestCase):
     )
     @override_settings(OIDC_RP_CLIENT_ID="example_id")
     def test_next_url(self):
-        """Test that `next` url gets stored to user session."""
         url = reverse("epfl_entra_id_init")
         request = self.factory.get(
             "{url}?{params}".format(url=url, params="next=/foo")
@@ -30,7 +29,6 @@ class EPFLEntraIdLoginTestCase(TestCase):
     )
     @override_settings(OIDC_RP_CLIENT_ID="example_id")
     def test_missing_next_url(self):
-        """Test that `next` url gets invalidated in user session."""
         url = reverse("epfl_entra_id_init")
         request = self.factory.get(url)
         request.session = dict()
