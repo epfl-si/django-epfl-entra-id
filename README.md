@@ -64,6 +64,7 @@ LOGOUT_REDIRECT_URL = "/"
 Edit your `urls.py` and add the following:
 
 ```python
+urlpatterns += path("", include('django-epfl-entra.urls')),
 urlpatterns += re_path(r'^auth/', include('mozilla_django_oidc.urls')),
 ```
 
