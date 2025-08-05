@@ -21,13 +21,13 @@ pip install django-epfl-entra-id
 
 ### Settings
 
-Add `'mozilla_django_oidc'` to `INSTALLED_APPS`:
+Add `mozilla_django_oidc` to `INSTALLED_APPS`:
 
 ```python
 INSTALLED_APPS = [
   ...
-  'django.contrib.auth',
-  'mozilla_django_oidc',  # Load after auth
+  "django.contrib.auth",
+  "mozilla_django_oidc",  # Load after auth
   ...
 ]
 ```
@@ -54,7 +54,7 @@ OIDC_OP_JWKS_ENDPOINT = f"{AUTH_DOMAIN}/discovery/v2.0/keys"
 OIDC_OP_USER_ENDPOINT = "https://graph.microsoft.com/oidc/userinfo"
 OIDC_RP_SIGN_ALGO = "RS256"
 
-LOGIN_URL = '/auth/authenticate'
+LOGIN_URL = "/auth/authenticate"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 ```
@@ -64,8 +64,12 @@ LOGOUT_REDIRECT_URL = "/"
 Edit your `urls.py` and add the following:
 
 ```python
-urlpatterns += path("", include('django-epfl-entra.urls')),
-urlpatterns += re_path(r'^auth/', include('mozilla_django_oidc.urls')),
+urlpatterns = [
+  ...
+  path("", include("django_epfl_entra_id.urls")),
+  path("auth/", include("mozilla_django_oidc.urls")),
+  ...
+]
 ```
 
 Example template:
