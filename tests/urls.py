@@ -1,6 +1,12 @@
-from django.urls import include, path, re_path
+import django
+
+if django.VERSION >= (3, 1, 0):
+    from django.urls import include
+    from django.urls import re_path as url
+else:
+    from django.conf.urls import include, url
 
 urlpatterns = [
-    path("", include("django_epfl_entra_id.urls")),
-    re_path(r"^auth/", include("mozilla_django_oidc.urls")),
+    url("", include("django_epfl_entra_id.urls")),
+    url(r"^auth/", include("mozilla_django_oidc.urls")),
 ]
