@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.0.4 / 2025-08-07
+
+### Others
+
+- [chore] Set minimum version of Python (#26).
+- [chore] Add Python and Django version classifiers (#27).
+- [docs] Improve doc consistency (#25).
+
 ## v0.0.3 / 2025-08-05
 
 ### Features
