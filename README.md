@@ -9,7 +9,7 @@ Custom [Microsoft Entra ID][entra-id] Authentication Backend for Django.
 ## Requirements
 
 - Python 3.6 or later
-- Django 1.11, 2.2, 3.2 or 4.2
+- Django 1.11, 2.2, 3.2, 4.2 or 5.2
 
 ## Installation
 
