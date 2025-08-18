@@ -33,7 +33,25 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         else:
             return self.UserModel.objects.filter(sciper=sciper)
 
+    def __rename_conflicting_user(self, claims):
+        """
+        Rename any existing user in the database with the same username
+        (usually a user who has left), appending '-inactive-<user_id>' to
+        avoid username conflicts when creating a new user.
+        """
+        username = claims.get("gaspar")
+        try:
+            other_user = self.UserModel.objects.get(username=username)
+            other_user.username = (
+                f"{other_user.username}-inactive-{other_user.id}"
+            )
+            other_user.save()
+        except self.UserModel.DoesNotExist:
+            pass
+
     def create_user(self, claims):
+        self.__rename_conflicting_user(claims)
+
         is_app_using_profile = hasattr(settings, "AUTH_PROFILE_MODULE")
 
         if is_app_using_profile:
