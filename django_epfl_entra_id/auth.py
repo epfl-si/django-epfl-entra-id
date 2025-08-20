@@ -33,7 +33,43 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         else:
             return self.UserModel.objects.filter(sciper=sciper)
 
+    def __rename_conflicting_user(self, claims):
+        """
+        Rename any existing user in the database with the same username
+        (usually a user who has left), appending '-inactive-<user_id>' to
+        avoid username conflicts when creating a new user or updating a user
+        """
+        username = claims.get("gaspar")
+        sciper = claims.get("sciper")
+        is_app_using_profile = hasattr(settings, "AUTH_PROFILE_MODULE")
+
+        try:
+            existing_user = self.UserModel.objects.get(username=username)
+
+            if is_app_using_profile:
+                user_profile_model = apps.get_model(
+                    *settings.AUTH_PROFILE_MODULE.split(".")
+                )
+                existing_user_profile = user_profile_model.objects.get(
+                    user=existing_user
+                )
+                existing_user_sciper = getattr(
+                    existing_user_profile, "sciper", None
+                )
+            else:
+                existing_user_sciper = getattr(existing_user, "sciper", None)
+
+            if existing_user_sciper != sciper:
+                existing_user.username = (
+                    f"{existing_user.username}-inactive-{existing_user.id}"
+                )
+                existing_user.save()
+        except self.UserModel.DoesNotExist:
+            pass
+
     def create_user(self, claims):
+        self.__rename_conflicting_user(claims)
+
         is_app_using_profile = hasattr(settings, "AUTH_PROFILE_MODULE")
 
         if is_app_using_profile:
@@ -61,6 +97,8 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         return user
 
     def update_user(self, user, claims):
+        self.__rename_conflicting_user(claims)
+
         for model_field, oidc_field in OIDC_USER_MAPPING:
             if claims.get(oidc_field):
                 setattr(user, model_field, claims.get(oidc_field))
