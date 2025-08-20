@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.0.5 / 2025-08-20
+
+### Features
+
+- [feature] Python 3.13 support (#30).
+- [feature] Django 5.2 support (#29).
+
+### Fixes
+
+- [fix] Rename conflicting users to avoid username collisions (#33).
+
+### Others
+
+- [feature] Init Makefile (#31).
+- [feature] Add targets clean, lint and test (#32).
+
 ## v0.0.4 / 2025-08-07
 
 ### Others
