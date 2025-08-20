@@ -6,20 +6,35 @@ Get the project with:
 
 ```bash
 git clone git@github.com:epfl-si/django-epfl-entra-id.git
-cd django-epfl-entra-id.git
+cd django-epfl-entra-id
 ```
 
-Then, create a virtual environment (Python version and some libraries) with
-your favourite tool and:
+Assuming you have `pyenv` and `pyenv-virtualenv` installed:
 
 ```bash
-pip install tox
+make setup
+```
+
+## Lint
+
+```bash
+make lint
 ```
 
 ## Test
 
 ```bash
 tox
+# or
+make test
+```
+
+## Build
+
+If you want to inspect the built artifacts locally:
+
+```bash
+pdm build
 ```
 
 ## Release
@@ -29,3 +44,5 @@ tox
 1. Create and push the tag  
     `git tag -a v<version> -m "django-epfl-entra-id v<version> release"`  
     `git push origin main --tags`
+
+After the push, the project will be automatically published to PyPI.
