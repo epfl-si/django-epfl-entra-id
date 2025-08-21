@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mozilla_django_oidc",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -116,3 +117,5 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 OIDC_USERNAME_ALGO = None
+
+AUTH_USER_MODEL = "user.User"
