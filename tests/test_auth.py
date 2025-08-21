@@ -59,3 +59,49 @@ class EPFLOIDCABTestCase(TestCase):
         self.assertEqual(u.first_name, "Jin")
         self.assertEqual(u.last_name, "Sakai")
         self.assertEqual(u.email, "jin.sakai@epfl.ch")
+
+    @patch("django_epfl_entra_id.auth.EPFLOIDCAB._verify_jws")
+    @patch("mozilla_django_oidc.auth.requests")
+    @override_settings(OIDC_USE_NONCE=False)
+    def test_update_user(self, request_mock, jws_mock):
+        auth_request = RequestFactory().get(
+            "/foo", {"code": "foo", "state": "bar"}
+        )
+        auth_request.session = {}
+
+        User.objects.create(
+            username="shimura",
+            email="jito.shimura@epfl.ch",
+            first_name="Jito",
+            last_name="Shimura",
+            sciper="000101",
+        )
+
+        self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
+        self.assertEqual(User.objects.filter(sciper="000101").exists(), True)
+        jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
+        get_json_mock = Mock()
+        get_json_mock.json.return_value = {
+            "gaspar": "shimura",
+            "email": "lord.shimura@epfl.ch",
+            "uniqueid": "000101",
+            "given_name": "Lord",
+            "family_name": "Shimura",
+        }
+        request_mock.get.return_value = get_json_mock
+        post_json_mock = Mock(status_code=200)
+        post_json_mock.json.return_value = {
+            "id_token": jwt.encode(
+                {"some": "payload"}, "foobar", algorithm="HS256"
+            ),
+            "access_token": "access_granted",
+        }
+        request_mock.post.return_value = post_json_mock
+
+        self.assertEqual(
+            self.backend.authenticate(request=auth_request),
+            User.objects.get(sciper="000101"),
+        )
+        u = User.objects.get(sciper="000101")
+        self.assertEqual(u.first_name, "Lord")
+        self.assertEqual(u.email, "lord.shimura@epfl.ch")
