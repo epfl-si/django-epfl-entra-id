@@ -30,9 +30,7 @@ class EPFLOIDCABTestCase(TestCase):
         )
         auth_request.session = {}
 
-        self.assertEqual(
-            User.objects.filter(email="jin.sakai@epfl.ch").exists(), False
-        )
+        self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
         jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
         get_json_mock = Mock()
         get_json_mock.json.return_value = {
@@ -54,8 +52,10 @@ class EPFLOIDCABTestCase(TestCase):
 
         self.assertEqual(
             self.backend.authenticate(request=auth_request),
-            User.objects.get(last_name="Sakai"),
+            User.objects.get(sciper="000100"),
         )
-        u = User.objects.get(last_name="Sakai")
+        u = User.objects.get(sciper="000100")
         self.assertEqual(u.username, "sakai")
-        self.assertEqual(u.sciper, "000100")
+        self.assertEqual(u.first_name, "Jin")
+        self.assertEqual(u.last_name, "Sakai")
+        self.assertEqual(u.email, "jin.sakai@epfl.ch")
