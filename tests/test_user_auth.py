@@ -8,8 +8,8 @@ from user.models import User
 from django_epfl_entra_id.auth import EPFLOIDCAB
 
 
-class EPFLOIDCABTestCase(TestCase):
-    """Authentication tests."""
+class EPFLOIDCABUserTestCase(TestCase):
+    """Authentication tests with User(AbstractUser)."""
 
     @override_settings(OIDC_OP_TOKEN_ENDPOINT="https://server.epfl.ch/token")
     @override_settings(OIDC_OP_USER_ENDPOINT="https://server.epfl.ch/user")
