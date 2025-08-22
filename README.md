@@ -94,6 +94,28 @@ Example template:
 AUTH_PROFILE_MODULE = "userprofile.UserProfile"
 ```
 
+### Logging
+
+Enable these loggers in settings to see logging messages to help you debug:
+
+```python
+LOGGING = {
+  ...
+  "loggers": {
+      "mozilla_django_oidc": {
+        "handlers": ["console"], 
+        "level": "DEBUG"
+      },
+      "django_epfl_entra_id": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+      },
+  ...
+}
+```
+
+Make sure to use the appropriate handler for your app.
+
 [github-actions-image]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml/badge.svg?branch=main
 [github-actions-url]: https://github.com/epfl-si/django-epfl-entra-id/actions/workflows/test.yml
 
