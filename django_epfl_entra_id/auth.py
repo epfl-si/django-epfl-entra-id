@@ -40,7 +40,7 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         avoid username conflicts when creating a new user or updating a user
         """
         username = claims.get("gaspar")
-        sciper = claims.get("sciper")
+        sciper = claims.get("uniqueid")
         is_app_using_profile = hasattr(settings, "AUTH_PROFILE_MODULE")
 
         try:
