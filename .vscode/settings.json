@@ -10,5 +10,11 @@
   "flake8.importStrategy": "fromEnvironment",
   "files.exclude": {
     "**/__pycache__": true
-  }
+  },
+  "python.testing.pytestArgs": [
+    "tests",
+    "--cov=django_epfl_entra_id"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }
