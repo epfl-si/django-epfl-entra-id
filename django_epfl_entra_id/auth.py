@@ -1,7 +1,11 @@
+import logging
+
 import jwt
 from django.apps import apps
 from django.conf import settings
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
+
+logger = logging.getLogger("django_epfl_entra_id.auth")
 
 OIDC_USER_MAPPING = (
     ("username", "gaspar"),
@@ -15,6 +19,7 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
     def filter_users_by_claims(self, claims):
         sciper = claims.get("uniqueid")
         if not sciper:
+            logger.critical("Bad user: %s", claims.get("gaspar"))
             return self.UserModel.objects.none()
 
         is_app_using_profile = hasattr(settings, "AUTH_PROFILE_MODULE")
@@ -64,6 +69,7 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
                     f"{existing_user.username}-inactive-{existing_user.id}"
                 )
                 existing_user.save()
+                logger.debug("Backup user: %s", existing_user)
         except self.UserModel.DoesNotExist:
             pass
 
@@ -94,6 +100,7 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
                 sciper=claims.get("uniqueid"),
             )
 
+        logger.debug("Create user: %s", user)
         return user
 
     def update_user(self, user, claims):
@@ -104,6 +111,7 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
                 setattr(user, model_field, claims.get(oidc_field))
 
         user.save()
+        logger.debug("Update user: %s", user)
         return user
 
     def get_userinfo(self, access_token, id_token, payload):
@@ -114,6 +122,8 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         userinfo = super(EPFLOIDCAB, self).get_userinfo(
             access_token, id_token, payload
         )
+
+        logger.debug("Get user info: %s", userinfo)
 
         id_token_decoded: str = jwt.decode(
             id_token, options={"verify_signature": False}
