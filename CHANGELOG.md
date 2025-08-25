@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.0.6 / 2025-08-25
+
+### Features
+
+- [feature] Logging (#47).
+
+### Fixes
+
+- [fix] sciper claim (#42).
+
+### Others
+
+- [tests] Launch pytest from VS Code (#46).
+- [tests] Update user with profile (#45).
+- [tests] Create user with profile (#44).
+- [tests] Add app userprofile with sciper field (#43).
+- [tests] Update user (#41).
+- [tests] Create user (#40).
+- [tests] Add app user with sciper field (#39).
+- [chore] Ignore .python-version (#38).
+- [feature] Add html report (#37).
+- [feature] Add targets setup, venv, installdeps and cleanall (#35).
+- [docs] Improve CONTRIBUTING (#36).
+
 ## v0.0.5 / 2025-08-20
 
 ### Features
