@@ -30,8 +30,9 @@ test: ## Run tests on every supported Python/Django combination.
 .PHONY: installdeps
 installdeps: ## Install all necessary dependencies in the virtualenv.
 	@eval "$$(pyenv init -)" && pyenv activate ${PYTHON_VENV} && \
-	pip install tox pdm crudini && \
-	pip install $$(crudini --get tox.ini testenv:lint deps) && \
+	pip install -r requirements/requirements-tools.txt && \
+	pip install -r requirements/requirements-lint.txt && \
+	pip install -r requirements/requirements-dev.txt && \
 	pip install .
 
 .PHONY: venv
