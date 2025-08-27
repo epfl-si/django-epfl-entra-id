@@ -2,6 +2,7 @@ import json
 from unittest.mock import Mock, patch
 
 import jwt
+import pytest
 from django.test import RequestFactory, TestCase, override_settings
 from user.models import User
 
@@ -153,3 +154,34 @@ class EPFLOIDCABUserTestCase(TestCase):
 
         u = User.objects.get(username="sakai")
         self.assertEqual(u.first_name, "Jin")
+
+    @patch("django_epfl_entra_id.auth.EPFLOIDCAB._verify_jws")
+    @patch("mozilla_django_oidc.auth.requests")
+    @override_settings(OIDC_USE_NONCE=False)
+    def test_create_user_without_sciper(self, request_mock, jws_mock):
+        auth_request = RequestFactory().get(
+            "/foo", {"code": "foo", "state": "bar"}
+        )
+        auth_request.session = {}
+
+        self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
+        jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
+        get_json_mock = Mock()
+        get_json_mock.json.return_value = {
+            "gaspar": "sakai",
+            "email": "jin.sakai@epfl.ch",
+            "given_name": "Jin",
+            "family_name": "Sakai",
+        }
+        request_mock.get.return_value = get_json_mock
+        post_json_mock = Mock(status_code=200)
+        post_json_mock.json.return_value = {
+            "id_token": jwt.encode(
+                {"some": "payload"}, "foobar", algorithm="HS256"
+            ),
+            "access_token": "access_granted",
+        }
+        request_mock.post.return_value = post_json_mock
+
+        with pytest.raises(Exception):
+            self.backend.authenticate(request=auth_request)
