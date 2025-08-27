@@ -105,3 +105,51 @@ class EPFLOIDCABUserTestCase(TestCase):
         u = User.objects.get(sciper="000101")
         self.assertEqual(u.first_name, "Lord")
         self.assertEqual(u.email, "lord.shimura@epfl.ch")
+
+    @patch("django_epfl_entra_id.auth.EPFLOIDCAB._verify_jws")
+    @patch("mozilla_django_oidc.auth.requests")
+    @override_settings(OIDC_USE_NONCE=False)
+    def test_update_user_with_same_username(self, request_mock, jws_mock):
+        auth_request = RequestFactory().get(
+            "/foo", {"code": "foo", "state": "bar"}
+        )
+        auth_request.session = {}
+
+        User.objects.create(
+            username="sakai",
+            email="kazumasa.sakai@epfl.ch",
+            first_name="Kazumasa",
+            last_name="Sakai",
+            sciper="000105",
+        )
+
+        self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
+        self.assertEqual(User.objects.filter(sciper="000105").exists(), True)
+        jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
+        get_json_mock = Mock()
+        get_json_mock.json.return_value = {
+            "gaspar": "sakai",
+            "email": "jin.sakai@epfl.ch",
+            "uniqueid": "000100",
+            "given_name": "Jin",
+            "family_name": "Sakai",
+        }
+        request_mock.get.return_value = get_json_mock
+        post_json_mock = Mock(status_code=200)
+        post_json_mock.json.return_value = {
+            "id_token": jwt.encode(
+                {"some": "payload"}, "foobar", algorithm="HS256"
+            ),
+            "access_token": "access_granted",
+        }
+        request_mock.post.return_value = post_json_mock
+
+        self.assertEqual(
+            self.backend.authenticate(request=auth_request),
+            User.objects.get(sciper="000100"),
+        )
+        u = User.objects.get(sciper="000105")
+        self.assertEqual(u.username, "sakai-inactive-1")
+
+        u = User.objects.get(username="sakai")
+        self.assertEqual(u.first_name, "Jin")
