@@ -1,5 +1,5 @@
 # ⚠️ Should run on every supported Python/Django combination.
 
-pytest==7.0.1
-pytest-cov==4.0.0
-pytest-django==4.5.2
+pytest
+pytest-cov
+pytest-django
