@@ -1,4 +1,4 @@
-PYTHON_VERSION=3.13.3
+PYTHON_VERSION=3.14.0
 PYTHON_VENV=django-epfl-entra-id
 
 .PHONY: help
