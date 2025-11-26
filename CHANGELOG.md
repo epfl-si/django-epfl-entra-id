@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.0.7 / 2025-11-26
+
+### Features
+
+- [feature] Python 3.14 support (#53).
+
+### Others
+
+- [tests] Update user with same username (#50).
+- [tests] Create user without sciper (#51).
+- [chore] Update isort to 7.0.0 (#56).
+- [chore] Update actions/setup-python to v6 (#55).
+- [chore] Update actions/checkout to v5 (#54).
+- [chore] Unpin dev requirements (#52).
+- [refactor] Requirements (#49).
+
 ## v0.0.6 / 2025-08-25
 
 ### Features
