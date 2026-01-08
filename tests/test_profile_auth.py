@@ -11,7 +11,7 @@ from django_epfl_entra_id.auth import EPFLOIDCAB
 
 User = get_user_model()
 
-if django.VERSION >= (4, 2, 0) and sys.version_info >= (3, 10):
+if django.VERSION >= (4, 2, 0) and sys.version_info >= (3, 10, 0):
     jws_mock_return_value = {"nonce": "nonce"}
 else:
     jws_mock_return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
