@@ -1,12 +1,19 @@
 import json
+import sys
 from unittest.mock import Mock, patch
 
+import django
 import jwt
 import pytest
 from django.test import RequestFactory, TestCase, override_settings
 from user.models import User
 
 from django_epfl_entra_id.auth import EPFLOIDCAB
+
+if django.VERSION >= (4, 2, 0) and sys.version_info >= (3, 10, 0):
+    jws_mock_return_value = {"nonce": "nonce"}
+else:
+    jws_mock_return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
 
 
 class EPFLOIDCABUserTestCase(TestCase):
@@ -32,7 +39,7 @@ class EPFLOIDCABUserTestCase(TestCase):
         auth_request.session = {}
 
         self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
-        jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
+        jws_mock.return_value = jws_mock_return_value
         get_json_mock = Mock()
         get_json_mock.json.return_value = {
             "gaspar": "sakai",
@@ -41,6 +48,7 @@ class EPFLOIDCABUserTestCase(TestCase):
             "given_name": "Jin",
             "family_name": "Sakai",
         }
+        get_json_mock.headers = {"content-type": "application/json"}
         request_mock.get.return_value = get_json_mock
         post_json_mock = Mock(status_code=200)
         post_json_mock.json.return_value = {
@@ -80,7 +88,7 @@ class EPFLOIDCABUserTestCase(TestCase):
 
         self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
         self.assertEqual(User.objects.filter(sciper="000101").exists(), True)
-        jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
+        jws_mock.return_value = jws_mock_return_value
         get_json_mock = Mock()
         get_json_mock.json.return_value = {
             "gaspar": "shimura",
@@ -89,6 +97,7 @@ class EPFLOIDCABUserTestCase(TestCase):
             "given_name": "Lord",
             "family_name": "Shimura",
         }
+        get_json_mock.headers = {"content-type": "application/json"}
         request_mock.get.return_value = get_json_mock
         post_json_mock = Mock(status_code=200)
         post_json_mock.json.return_value = {
@@ -126,7 +135,7 @@ class EPFLOIDCABUserTestCase(TestCase):
 
         self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
         self.assertEqual(User.objects.filter(sciper="000105").exists(), True)
-        jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
+        jws_mock.return_value = jws_mock_return_value
         get_json_mock = Mock()
         get_json_mock.json.return_value = {
             "gaspar": "sakai",
@@ -135,6 +144,7 @@ class EPFLOIDCABUserTestCase(TestCase):
             "given_name": "Jin",
             "family_name": "Sakai",
         }
+        get_json_mock.headers = {"content-type": "application/json"}
         request_mock.get.return_value = get_json_mock
         post_json_mock = Mock(status_code=200)
         post_json_mock.json.return_value = {
@@ -165,7 +175,7 @@ class EPFLOIDCABUserTestCase(TestCase):
         auth_request.session = {}
 
         self.assertEqual(User.objects.filter(sciper="000100").exists(), False)
-        jws_mock.return_value = json.dumps({"nonce": "nonce"}).encode("utf-8")
+        jws_mock.return_value = jws_mock_return_value
         get_json_mock = Mock()
         get_json_mock.json.return_value = {
             "gaspar": "sakai",
@@ -173,6 +183,7 @@ class EPFLOIDCABUserTestCase(TestCase):
             "given_name": "Jin",
             "family_name": "Sakai",
         }
+        get_json_mock.headers = {"content-type": "application/json"}
         request_mock.get.return_value = get_json_mock
         post_json_mock = Mock(status_code=200)
         post_json_mock.json.return_value = {
