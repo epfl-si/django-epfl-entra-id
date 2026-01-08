@@ -7,7 +7,7 @@ name = "django-epfl-entra-id"
 dynamic = ["version"]
 requires-python = ">= 3.6"
 dependencies = [
-  "mozilla-django-oidc",
+  "mozilla-django-oidc < 5",
   "pyjwt",
 ]
 description = "Custom Microsoft Entra ID Authentication Backend for Django."
