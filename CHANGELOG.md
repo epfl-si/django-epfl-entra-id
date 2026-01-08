@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.0.8 / 2026-01-08
+
+### Fixes
+
+- [fix] Use mozilla-django-oidc < 5 (#59)
+
 ## v0.0.7 / 2025-11-26
 
 ### Features
