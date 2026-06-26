@@ -1,4 +1,5 @@
 import logging
+import os
 
 import jwt
 from django.apps import apps
@@ -113,6 +114,26 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         user.save()
         logger.debug("Update user: %s", user)
         return user
+
+    def verify_claims(self, claims):
+        if not super().verify_claims(claims):
+            return False
+
+        AUTHENTICATION_RIGHTS = os.getenv(
+            "AUTHENTICATION_RIGHTS", "false"
+        ).lower()
+        if AUTHENTICATION_RIGHTS != "true":
+            return True
+
+        authorizations = claims.get("authorizations", [])
+
+        if not authorizations:
+            logger.warning(
+                f"Access refused for {claims.get('gaspar', 'Unknown')}: "
+                "No authorization found."
+            )
+            return False
+        return True
 
     def get_userinfo(self, access_token, id_token, payload):
         """

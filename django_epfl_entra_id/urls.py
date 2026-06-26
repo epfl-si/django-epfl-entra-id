@@ -13,4 +13,5 @@ urlpatterns = [
         views.EPFLEntraIdLogin.as_view(),
         name="epfl_entra_id_init",
     ),
+    url(r"forbidden/$", views.forbidden_view, name="entra_id_forbidden"),
 ]
