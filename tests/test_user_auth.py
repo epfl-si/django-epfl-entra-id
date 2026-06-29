@@ -197,15 +197,10 @@ class EPFLOIDCABUserTestCase(TestCase):
         with pytest.raises(Exception):
             self.backend.authenticate(request=auth_request)
 
-    @patch("os.getenv")
     @patch("django_epfl_entra_id.auth.EPFLOIDCAB._verify_jws")
     @patch("mozilla_django_oidc.auth.requests")
-    @override_settings(OIDC_USE_NONCE=False)
-    def test_authenticate_rights_enabled_rejected(
-        self, request_mock, jws_mock, getenv_mock
-    ):
-        getenv_mock.return_value = "true"
-
+    @override_settings(OIDC_USE_NONCE=False, OIDC_REQUIRE_AUTHORIZATIONS=True)
+    def test_authenticate_rights_enabled_rejected(self, request_mock, jws_mock):
         auth_request = RequestFactory().get(
             "/foo", {"code": "foo", "state": "bar"}
         )
@@ -235,55 +230,12 @@ class EPFLOIDCABUserTestCase(TestCase):
         user = self.backend.authenticate(request=auth_request)
         self.assertIsNone(user)
 
-    @patch("os.getenv")
     @patch("django_epfl_entra_id.auth.EPFLOIDCAB._verify_jws")
     @patch("mozilla_django_oidc.auth.requests")
-    @override_settings(OIDC_USE_NONCE=False)
-    def test_authenticate_rights_enabled_accepted(
-        self, request_mock, jws_mock, getenv_mock
-    ):
-        getenv_mock.return_value = "true"
-
-        auth_request = RequestFactory().get(
-            "/foo", {"code": "foo", "state": "bar"}
-        )
-        auth_request.session = {}
-
-        jws_mock.return_value = jws_mock_return_value
-        get_json_mock = Mock()
-        get_json_mock.json.return_value = {
-            "gaspar": "sakai",
-            "email": "jin.sakai@epfl.ch",
-            "uniqueid": "000100",
-            "given_name": "Jin",
-            "family_name": "Sakai",
-            "authorizations": ["MonDroitSecretEPFL"],
-        }
-        get_json_mock.headers = {"content-type": "application/json"}
-        request_mock.get.return_value = get_json_mock
-
-        post_json_mock = Mock(status_code=200)
-        post_json_mock.json.return_value = {
-            "id_token": jwt.encode(
-                {"some": "payload"}, "foobar", algorithm="HS256"
-            ),
-            "access_token": "access_granted",
-        }
-        request_mock.post.return_value = post_json_mock
-
-        user = self.backend.authenticate(request=auth_request)
-        self.assertIsNotNone(user)
-        self.assertEqual(user.username, "sakai")
-
-    @patch("os.getenv")
-    @patch("django_epfl_entra_id.auth.EPFLOIDCAB._verify_jws")
-    @patch("mozilla_django_oidc.auth.requests")
-    @override_settings(OIDC_USE_NONCE=False)
+    @override_settings(OIDC_USE_NONCE=False, OIDC_REQUIRE_AUTHORIZATIONS=False)
     def test_authenticate_rights_disabled_accepted(
-        self, request_mock, jws_mock, getenv_mock
+        self, request_mock, jws_mock
     ):
-        getenv_mock.return_value = "false"
-
         auth_request = RequestFactory().get(
             "/foo", {"code": "foo", "state": "bar"}
         )
@@ -319,7 +271,7 @@ class EPFLOIDCABUserTestCase(TestCase):
             "gaspar": "sakai",
             "given_name": "Jin",
             "family_name": "Sakai",
-            "authorizations": ["MonDroitSecretEPFL"],
+            "authorizations": ["Ghost"],
         }
 
         result = self.backend.verify_claims(bad_claims)

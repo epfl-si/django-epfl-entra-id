@@ -1,5 +1,4 @@
 import logging
-import os
 
 import jwt
 from django.apps import apps
@@ -119,10 +118,10 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         if not super().verify_claims(claims):
             return False
 
-        AUTHENTICATION_RIGHTS = os.getenv(
-            "AUTHENTICATION_RIGHTS", "false"
-        ).lower()
-        if AUTHENTICATION_RIGHTS != "true":
+        require_authorizations = getattr(
+            settings, "OIDC_REQUIRE_AUTHORIZATIONS", False
+        )
+        if not require_authorizations:
             return True
 
         authorizations = claims.get("authorizations", [])
