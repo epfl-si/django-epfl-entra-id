@@ -1,10 +1,24 @@
 # Changelog
 
+## v0.0.9 / 2026-06-30
+
+### Features
+
+- [feature] Implement strict access control based on authorizations (#63).
+
+### Fixes
+
+- [fix] Use mozilla-django-oidc 5.x (#61).
+
+### Others
+
+- [chore] Bump black from 25.1.0 to 26.3.1 (#62).
+
 ## v0.0.8 / 2026-01-08
 
 ### Fixes
 
-- [fix] Use mozilla-django-oidc < 5 (#59)
+- [fix] Use mozilla-django-oidc < 5 (#59).
 
 ## v0.0.7 / 2025-11-26
 
