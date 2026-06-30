@@ -232,10 +232,8 @@ class EPFLOIDCABUserTestCase(TestCase):
 
     @patch("django_epfl_entra_id.auth.EPFLOIDCAB._verify_jws")
     @patch("mozilla_django_oidc.auth.requests")
-    @override_settings(OIDC_USE_NONCE=False, OIDC_REQUIRE_AUTHORIZATIONS=False)
-    def test_authenticate_rights_disabled_accepted(
-        self, request_mock, jws_mock
-    ):
+    @override_settings(OIDC_USE_NONCE=False, OIDC_REQUIRE_AUTHORIZATIONS=True)
+    def test_authenticate_rights_enabled_accepted(self, request_mock, jws_mock):
         auth_request = RequestFactory().get(
             "/foo", {"code": "foo", "state": "bar"}
         )
@@ -249,6 +247,7 @@ class EPFLOIDCABUserTestCase(TestCase):
             "uniqueid": "000100",
             "given_name": "Jin",
             "family_name": "Sakai",
+            "authorizations": ["Ghost"],
         }
         get_json_mock.headers = {"content-type": "application/json"}
         request_mock.get.return_value = get_json_mock
