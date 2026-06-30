@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 
@@ -37,3 +38,9 @@ class EPFLEntraIdLoginTestCase(TestCase):
         self.assertEqual(request.method, "GET")
         self.assertEqual(request.path, "/admin/login/")
         self.assertEqual(request.get_full_path(), "/admin/login/")
+
+    def test_forbidden_view_raises_permission_denied(self):
+        request = self.factory.get("/forbidden/")
+
+        with self.assertRaises(PermissionDenied):
+            views.forbidden_view(request)

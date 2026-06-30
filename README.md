@@ -94,6 +94,33 @@ Example template:
 AUTH_PROFILE_MODULE = "userprofile.UserProfile"
 ```
 
+#### Restrict Authentication by Rights (Authorizations)
+
+By default, any user with a valid EPFL Entra ID account can authenticate.
+If you want to restrict access only to users possessing specific application
+rights (claims injected by the EPFL portal), follow these steps:
+
+##### Configure your app's `settings.py`
+
+You need to enable the strict rights verification and define where Django should
+redirect unauthorized users (e.g., to a 403 Forbidden page). Add the following
+to your settings:
+  
+```python
+  # Enable strict rights verification. 
+  # (You can dynamically load this from your .env file if preferred)
+  OIDC_REQUIRE_AUTHORIZATIONS = True
+  
+  # Redirect unauthorized users to the dedicated forbidden view
+  LOGIN_REDIRECT_URL_FAILURE = "/forbidden"
+```
+
+> Note: Ensure that your application rights are properly
+> configured in the EPFL deployment portal
+> ([app-portal](https://app-portal.epfl.ch/)).
+> Entra ID relies on this configuration to
+> inject the authorizations claim into the user's token.
+
 ### Logging
 
 Enable these loggers in settings to see logging messages to help you debug:

@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
@@ -15,3 +16,11 @@ class EPFLEntraIdLogin(View):
                 else ""
             )
         )
+
+
+def forbidden_view(request):
+    """
+    Dedicated view to reject users who have successfully authenticated with
+    Entra ID but lack the authorizations (claims) required by the application.
+    """
+    raise PermissionDenied()

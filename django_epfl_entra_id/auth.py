@@ -114,6 +114,26 @@ class EPFLOIDCAB(OIDCAuthenticationBackend):
         logger.debug("Update user: %s", user)
         return user
 
+    def verify_claims(self, claims):
+        if not super().verify_claims(claims):
+            return False
+
+        require_authorizations = getattr(
+            settings, "OIDC_REQUIRE_AUTHORIZATIONS", False
+        )
+        if not require_authorizations:
+            return True
+
+        authorizations = claims.get("authorizations", [])
+
+        if not authorizations:
+            logger.warning(
+                f"Access refused for {claims.get('gaspar', 'Unknown')}: "
+                "No authorization found."
+            )
+            return False
+        return True
+
     def get_userinfo(self, access_token, id_token, payload):
         """
         Get user info from both user info endpoint (default) and
